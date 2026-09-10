@@ -4,7 +4,6 @@ import numpy as np
 import pydeck as pdk
 from sklearn.ensemble import RandomForestRegressor
 
-# PASTE YOUR FREE MAPBOX TOKEN HERE (Get it free in 1 min at mapbox.com)
 MAPBOX_TOKEN = "YOUR_MAPBOX_TOKEN_HERE"
 
 @st.cache_resource
@@ -48,10 +47,9 @@ risk_data = pd.DataFrame({
     'color': [[255, 50, 50, 230] if r > 75 else [0, 255, 120, 200] for r in risk_scores]
 })
 
-# Using Mapbox Satellite imagery view covering entire Bengaluru Urban & Rural
 st.pydeck_chart(pdk.Deck(
     map_provider='mapbox',
-    map_style='mapbox://styles/mapbox/satellite-streets-v12',
+    map_style='mapbox://styles/mapbox/satellite-v9',
     api_keys={'mapbox': MAPBOX_TOKEN},
     initial_view_state=pdk.ViewState(
         latitude=13.02, 
@@ -77,4 +75,4 @@ st.pydeck_chart(pdk.Deck(
 
 if st.button("Generate Incident Report"):
     critical_nodes = len(risk_data[risk_data['risk'] > 75])
-    st.error(f"⚠️ {critical_nodes} critical infrastructure nodes flagged on satellite imagery.")
+    st.error(f"⚠️ {critical_nodes} critical infrastructure nodes flagged on satellite telemetry.")
