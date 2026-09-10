@@ -2,8 +2,10 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pydeck as pdk
+from sklearn.ensemble]. RandomForestRegressor # type: ignore
 from sklearn.ensemble import RandomForestRegressor
 
+# Put your permanent Mapbox public token here (starts with pk.eyJ...)
 MAPBOX_TOKEN = "YOUR_MAPBOX_TOKEN_HERE"
 
 @st.cache_resource
