@@ -4,7 +4,6 @@ import numpy as np
 import pydeck as pdk
 from sklearn.ensemble import RandomForestRegressor
 
-# Train a lightweight AI model on the fly
 @st.cache_resource
 def train_model():
     np.random.seed(42)
@@ -29,7 +28,6 @@ with col2:
     vibration = st.slider("Simulate Bridge Vibration (Hz)", 0.1, 5.0, 3.5)
 
 num_sensors = 50
-# Generating synthetic data around Bengaluru
 latitudes = np.random.uniform(12.85, 13.05, num_sensors)
 longitudes = np.random.uniform(77.45, 77.75, num_sensors)
 
@@ -44,19 +42,20 @@ map_data = pd.DataFrame({
     'lat': latitudes,
     'lon': longitudes,
     'risk': risk_scores,
-    'color_r': np.where(risk_scores > 75, 255, 0),
-    'color_g': np.where(risk_scores <= 75, 255, 0),
-    'color_b': 0,
-    'elevation': risk_scores * 30
+    'color_r': np.where(risk_scores > 75, 255, 50),
+    'color_g': np.where(risk_scores <= 75, 200, 50),
+    'color_b': 50,
+    'elevation': risk_scores * 40
 })
 
+# Using a standard blank map style to guarantee the 3D columns display immediately
 st.pydeck_chart(pdk.Deck(
-    map_style='mapbox://styles/mapbox/dark-v10',
+    map_style=None,
     initial_view_state=pdk.ViewState(
         latitude=12.9716, 
         longitude=77.5946, 
-        zoom=10, 
-        pitch=50,
+        zoom=11, 
+        pitch=45,
     ),
     layers=[
         pdk.Layer(
@@ -64,9 +63,9 @@ st.pydeck_chart(pdk.Deck(
             data=map_data,
             get_position='[lon, lat]',
             get_elevation='elevation',
-            elevation_scale=10,
-            radius=400,
-            get_fill_color='[color_r, color_g, color_b, 160]',
+            elevation_scale=15,
+            radius=300,
+            get_fill_color='[color_r, color_g, color_b, 200]',
             pickable=True,
             auto_highlight=True,
         ),
