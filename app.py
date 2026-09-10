@@ -19,7 +19,7 @@ def train_model():
 model = train_model()
 
 st.title("🏙️ Smart City Digital Twin")
-st.markdown("Real-World 3D Architectural City Mapping & AI Risk Prediction.")
+st.markdown("Bengaluru Urban & Rural Regional Infrastructure Telemetry")
 
 col1, col2 = st.columns(2)
 with col1:
@@ -27,10 +27,10 @@ with col1:
 with col2:
     vibration = st.slider("Simulate Bridge Vibration (Hz)", 0.1, 5.0, 3.5)
 
-# Generate sensor points across Bengaluru
-num_sensors = 40
-latitudes = np.random.uniform(12.93, 13.01, num_sensors)
-longitudes = np.random.uniform(77.55, 77.65, num_sensors)
+# Wide coordinate spread covering Bengaluru Urban & Rural districts
+num_sensors = 150
+latitudes = np.random.uniform(12.70, 13.35, num_sensors)
+longitudes = np.random.uniform(77.25, 77.90, num_sensors)
 
 current_conditions = pd.DataFrame({
     'time_of_day': [time_of_day]*num_sensors, 
@@ -38,34 +38,32 @@ current_conditions = pd.DataFrame({
 })
 risk_scores = model.predict(current_conditions)
 
-# Data points for AI risk spikes overlaying the city
 risk_data = pd.DataFrame({
     'lat': latitudes,
     'lon': longitudes,
     'risk': risk_scores,
-    'elevation': risk_scores * 20,
-    'color': [[255, 50, 50, 200] if r > 75 else [50, 200, 50, 150] for r in risk_scores]
+    'elevation': risk_scores * 30,
+    'color': [[255, 50, 50, 230] if r > 75 else [0, 255, 120, 200] for r in risk_scores]
 })
 
-# Render 3D Map using OpenStreetMap / Carto basemap for realistic urban layout
+# Zoomed out to frame the entire combined urban and rural region
 st.pydeck_chart(pdk.Deck(
-    map_style='mapbox://styles/mapbox/light-v10',
+    map_style='mapbox://styles/mapbox/satellite-v9',
     initial_view_state=pdk.ViewState(
-        latitude=12.9716, 
-        longitude=77.5946, 
-        zoom=13, 
-        pitch=55,
-        bearing=30
+        latitude=13.02, 
+        longitude=77.59, 
+        zoom=9.5, 
+        pitch=40,
+        bearing=10
     ),
     layers=[
-        # AI Risk Spikes Layer
         pdk.Layer(
             'ColumnLayer',
-            data=risk_data,
+            data=map_data,
             get_position='[lon, lat]',
             get_elevation='elevation',
             elevation_scale=5,
-            radius=150,
+            radius=400,
             get_fill_color='color',
             pickable=True,
             auto_highlight=True,
@@ -75,4 +73,4 @@ st.pydeck_chart(pdk.Deck(
 
 if st.button("Generate Incident Report"):
     critical_nodes = len(risk_data[risk_data['risk'] > 75])
-    st.error(f"⚠️ {critical_nodes} critical infrastructure nodes flagged across the urban grid.")
+    st.error(f"⚠️ {critical_nodes} critical infrastructure nodes flagged across Bengaluru Urban & Rural districts.")
