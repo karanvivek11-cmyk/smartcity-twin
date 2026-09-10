@@ -27,7 +27,6 @@ with col1:
 with col2:
     vibration = st.slider("Simulate Bridge Vibration (Hz)", 0.1, 5.0, 3.5)
 
-# Wide coordinate spread covering Bengaluru Urban & Rural districts
 num_sensors = 150
 latitudes = np.random.uniform(12.70, 13.35, num_sensors)
 longitudes = np.random.uniform(77.25, 77.90, num_sensors)
@@ -46,7 +45,6 @@ risk_data = pd.DataFrame({
     'color': [[255, 50, 50, 230] if r > 75 else [0, 255, 120, 200] for r in risk_scores]
 })
 
-# Zoomed out to frame the entire combined urban and rural region
 st.pydeck_chart(pdk.Deck(
     map_style='mapbox://styles/mapbox/satellite-v9',
     initial_view_state=pdk.ViewState(
@@ -59,7 +57,7 @@ st.pydeck_chart(pdk.Deck(
     layers=[
         pdk.Layer(
             'ColumnLayer',
-            data=map_data,
+            data=risk_data,
             get_position='[lon, lat]',
             get_elevation='elevation',
             elevation_scale=5,
