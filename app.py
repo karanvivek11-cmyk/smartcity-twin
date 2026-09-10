@@ -4,6 +4,9 @@ import numpy as np
 import pydeck as pdk
 from sklearn.ensemble import RandomForestRegressor
 
+# PASTE YOUR FREE MAPBOX TOKEN HERE (Get it free in 1 min at mapbox.com)
+MAPBOX_TOKEN = "YOUR_MAPBOX_TOKEN_HERE"
+
 @st.cache_resource
 def train_model():
     np.random.seed(42)
@@ -19,7 +22,7 @@ def train_model():
 model = train_model()
 
 st.title("🏙️ Smart City Digital Twin")
-st.markdown("Bengaluru Urban & Rural Regional Infrastructure Telemetry")
+st.markdown("Bengaluru Urban & Rural Satellite Telemetry")
 
 col1, col2 = st.columns(2)
 with col1:
@@ -45,9 +48,11 @@ risk_data = pd.DataFrame({
     'color': [[255, 50, 50, 230] if r > 75 else [0, 255, 120, 200] for r in risk_scores]
 })
 
-# Using CARTO's token-free dark matter style so the map background and roads render clearly
+# Using Mapbox Satellite imagery view covering entire Bengaluru Urban & Rural
 st.pydeck_chart(pdk.Deck(
-    map_style='https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+    map_provider='mapbox',
+    map_style='mapbox://styles/mapbox/satellite-streets-v12',
+    api_keys={'mapbox': MAPBOX_TOKEN},
     initial_view_state=pdk.ViewState(
         latitude=13.02, 
         longitude=77.59, 
@@ -72,4 +77,4 @@ st.pydeck_chart(pdk.Deck(
 
 if st.button("Generate Incident Report"):
     critical_nodes = len(risk_data[risk_data['risk'] > 75])
-    st.error(f"⚠️ {critical_nodes} critical infrastructure nodes flagged across Bengaluru Urban & Rural districts.")
+    st.error(f"⚠️ {critical_nodes} critical infrastructure nodes flagged on satellite imagery.")
