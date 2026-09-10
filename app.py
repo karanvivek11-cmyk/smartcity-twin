@@ -45,8 +45,9 @@ risk_data = pd.DataFrame({
     'color': [[255, 50, 50, 230] if r > 75 else [0, 255, 120, 200] for r in risk_scores]
 })
 
+# Using CARTO's token-free dark matter style so the map background and roads render clearly
 st.pydeck_chart(pdk.Deck(
-    map_style='mapbox://styles/mapbox/satellite-v9',
+    map_style='https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
     initial_view_state=pdk.ViewState(
         latitude=13.02, 
         longitude=77.59, 
