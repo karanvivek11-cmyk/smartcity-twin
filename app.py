@@ -1,12 +1,9 @@
+
 import streamlit as st
 import pandas as pd
 import numpy as np
 import pydeck as pdk
-from sklearn.ensemble]. RandomForestRegressor # type: ignore
 from sklearn.ensemble import RandomForestRegressor
-
-# Put your permanent Mapbox public token here (starts with pk.eyJ...)
-MAPBOX_TOKEN = "YOUR_MAPBOX_TOKEN_HERE"
 
 @st.cache_resource
 def train_model():
@@ -23,7 +20,7 @@ def train_model():
 model = train_model()
 
 st.title("🏙️ Smart City Digital Twin")
-st.markdown("Bengaluru Urban & Rural Satellite Telemetry")
+st.markdown("Bengaluru Urban & Rural Satellite Telemetry (Token-Free)")
 
 col1, col2 = st.columns(2)
 with col1:
@@ -50,9 +47,7 @@ risk_data = pd.DataFrame({
 })
 
 st.pydeck_chart(pdk.Deck(
-    map_provider='mapbox',
-    map_style='mapbox://styles/mapbox/satellite-v9',
-    api_keys={'mapbox': MAPBOX_TOKEN},
+    map_style=None,
     initial_view_state=pdk.ViewState(
         latitude=13.02, 
         longitude=77.59, 
@@ -61,6 +56,12 @@ st.pydeck_chart(pdk.Deck(
         bearing=10
     ),
     layers=[
+        pdk.Layer(
+            'BitmapLayer',
+            image='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+            bounds=[77.25, 12.70, 77.90, 13.35],
+            pickable=True,
+        ),
         pdk.Layer(
             'ColumnLayer',
             data=risk_data,
@@ -77,4 +78,4 @@ st.pydeck_chart(pdk.Deck(
 
 if st.button("Generate Incident Report"):
     critical_nodes = len(risk_data[risk_data['risk'] > 75])
-    st.error(f"⚠️ {critical_nodes} critical infrastructure nodes flagged on satellite telemetry.")
+    st.error(f"⚠️ {critical_nodes} critical infrastructure nodes flagged across Bengaluru.")
